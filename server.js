@@ -1,17 +1,16 @@
-import express from 'express'
-import cors from 'cors';
-import dbConnect from './db.js'
-import Opportunity from './schema.js';
+import express from "express";
+import cors from "cors";
+import dbConnect from "./db.js";
+import Opportunity from "./schema.js";
 
-const app = express()
-app.use(cors());
+const app = express();
+app.use(cors({ origin: "https://opportunity-client.vercel.app/" }));
 
 app.use(express.json());
 
+dbConnect();
 
-dbConnect()
-
-app.get('/', async (req, res) => {
+app.get("/", async (req, res) => {
   try {
     const opportunities = await Opportunity.find();
     res.json(opportunities);
@@ -19,7 +18,7 @@ app.get('/', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-app.post('/', async (req, res) => {
+app.post("/", async (req, res) => {
   try {
     const opportunity = new Opportunity(req.body);
     const saved = await opportunity.save();
@@ -27,28 +26,28 @@ app.post('/', async (req, res) => {
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
-})
-app.put('/:id', async (req, res) => {
+});
+app.put("/:id", async (req, res) => {
   try {
     const updated = await Opportunity.findByIdAndUpdate(
       req.params.id,
       req.body,
       { new: true, runValidators: true }
     );
-    if (!updated) return res.status(404).json({ error: 'Not found' });
+    if (!updated) return res.status(404).json({ error: "Not found" });
     res.json(updated);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
 });
-app.delete('/:id', async (req, res) => {
+app.delete("/:id", async (req, res) => {
   try {
     const deleted = await Opportunity.findByIdAndDelete(req.params.id);
-    if (!deleted) return res.status(404).json({ error: 'Not found' });
-    res.json({ message: 'Opportunity deleted successfully' });
+    if (!deleted) return res.status(404).json({ error: "Not found" });
+    res.json({ message: "Opportunity deleted successfully" });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
 });
 
-app.listen(3000)
+app.listen(3000);
