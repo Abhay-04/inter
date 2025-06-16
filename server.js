@@ -4,7 +4,7 @@ import dbConnect from "./db.js";
 import Opportunity from "./schema.js";
 
 const app = express();
-app.use(cors({ origin: "https://opportunity-client.vercel.app/" }));
+app.use(cors({ origin: "https://opportunity-client.vercel.app" }));
 
 app.use(express.json());
 
